@@ -1,0 +1,22 @@
+[?25l[J[J[J[?2004h[?25h[?1049h[?1h=[?2004h[1;24r[?12h[?12l[27m[23m[29m[m[H[2J[?25l[24;1H"a.cpp" 474L, 13719C[1;1H#include <sys/socket.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+
+#define HEAD_LEN[16C8  //消息头长度固定为8个字节
+#define BUFLEN[18C4096
+#define FCGI_VERSION_1[11C1  //版本号[18;1H// 消息类型
+enum fcgi_request_type {
+    FCGI_BEGIN_REQUEST      = 1,
+    FCGI_ABORT_REQUEST      = 2,
+    FCGI_END_REQUEST[8C= 3,
+    FCGI_PARAMS[13C= 4,]2;a.cpp (~/http/tst) - VIM]1;a.cpp[1;1H[?25h
+
+[24;1H[?2004l[?2004l[?1l>[?1049lVim: Error reading input, exiting...
+Vim: Finished.
+[24;1H]2;Terminal]1;Terminal

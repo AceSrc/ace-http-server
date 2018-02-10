@@ -1,0 +1,8 @@
+GITFLAGS = -q --author='acesrc <acesrczero@gmail.com>' --no-verify --allow-empty
+
+define git_commit
+	-@git add . -A --ignore-errors
+	-@while (test -e .git/index.lock); do sleep 0.1; done
+	-@(echo "> $(1)" && id -un && uname -a && uptime && (head -c 20 /dev/urandom | hexdump -v -e '"%20x"') && echo) | git commit -m "$(2)" $(GITFLAGS)
+endef
+
