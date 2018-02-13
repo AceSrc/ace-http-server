@@ -43,18 +43,25 @@ typedef unique_ptr<T> uptr;
 
 Queue<T> q;
 void ok() {
-  q.push(uptr(new T));
-  this_thread::sleep_for(std::chrono::seconds(2));
-  auto c = q.pop();
   this_thread::sleep_for(std::chrono::seconds(1));
   q.push(uptr(new T));
-  auto d = q.pop();
+  //q.push(uptr(new T));
+  //this_thread::sleep_for(std::chrono::seconds(2));
+  //auto c = q.pop();
+  //this_thread::sleep_for(std::chrono::seconds(1));
+  //q.push(uptr(new T));
+  //auto d = q.pop();
+}
+
+void setok() {
+  auto c = q.pop();
 }
 
 int main(int argc, char **argv) {
-  //q.push(uptr(new T));
   //auto c = q.pop();
-  thread t1(ok), t2(ok), t3(ok), t4(ok);
+  //q.push(uptr(new T));
+  thread t1(ok), t2(setok); 
+  //thread t1(ok), t2(ok), t3(ok), t4(ok);
   t1.join();
   t2.join();
   return 0;

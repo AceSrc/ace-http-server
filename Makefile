@@ -16,7 +16,7 @@ CFLAGS += -O2 -MMD -Wall -ggdb $(INCLUDES) -DDEBUG --std=c++11
 
 LIB_DIR += -L/usr/lib
 LIBS += 
-LINKFLAGS = $(LIB_DIR) $(LIBS)
+LINKFLAGS = $(LIB_DIR) $(LIBS) -lpthread
 
 # Files to be compiled
 SRCS = $(shell find -L src/ -name "*.cpp")
