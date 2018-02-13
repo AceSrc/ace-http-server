@@ -1,6 +1,10 @@
 #ifndef __FASTCGI_H__
 #define __FASTCGI_H__
 
+#include <tcp.h>
+#include <type.h>
+#include <buffer.h>
+
 enum fcgi_request_type {
   FCGI_BEGIN_REQUEST = 1,
   FCGI_ABORT_REQUEST = 2,
@@ -22,7 +26,6 @@ enum fcgi_role {
 };
 
 
-typedef unsigned char uchar;
 struct FCGI_Header {
   uchar version;
   uchar type;
@@ -60,5 +63,28 @@ struct FCGI_EndRequestBody {
   uchar protocolStatus;  
   uchar reserved[3];  
 };  
+
+class Fastcgi {
+private:
+  Speaker speaker;
+  char *response_stdout;
+  char *response_stderr;
+
+  void send_request_header(uchar type, ushort requestId, ushort contentLength);
+  void send_content(uchar type, ushort requestId, const Buffer &buffer);
+  void send_begin_request(ushort requestId, ushort role, uchar flag);
+  void send_params(ushort requestId, const params_type &params);
+  void send_stdin(ushort requestId, const char *s);
+
+  FCGI_Header recv_header();
+public:
+  Fastcgi(const char *ip, int proxy = 9000);
+  ~Fastcgi();
+  void send(ushort requestId, const params_type &params, const char *s);
+
+  void recv();
+  char *get_stdout() const;
+  char *get_stderr() const;
+} ;
 #endif
 

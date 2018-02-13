@@ -1,3 +1,6 @@
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <assert.h>
 #include <math.h>
 #include <string.h>
@@ -27,12 +30,9 @@ using namespace std;
 const int inf = 2147483647;
 
 int main(int argc, char **argv) {
-  char a[100];  
-  a[0] = 'a';
-  a[1] = 'b';
-  a[2] = 'c';
-  a[3] = 'd';
-  a[4] = 'e';
-  cout << strtok(a, "bc") << ' ' << strtok(NULL, "e") << endl;
+  auto fd = open("log", O_WRONLY);
+  char buf[1000] = "HelloWorld\n";
+  write(fd, buf, strlen(buf));
+  close(fd);
   return 0;
 }

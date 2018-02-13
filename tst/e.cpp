@@ -26,10 +26,22 @@ using namespace std;
   } while (0)
 const int inf = 2147483647;
 
+class A {
+public:
+  ~A() {
+    cout << "Des A" << endl;
+  }
+} ;
+
+class B {
+  A a;
+public:
+  ~B() {
+    cout << "Des B" << endl;
+  }
+} ;
+
 int main(int argc, char **argv) {
-  void *p = malloc(128);
-  cout << p << endl;
-  p = realloc(p, 128);
-  cout << p << endl;
+  B b;
   return 0;
 }

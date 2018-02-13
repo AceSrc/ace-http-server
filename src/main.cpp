@@ -7,29 +7,23 @@
 #include <response.h>
 #include <iostream>
 #include <request.h>
+#include <type.h>
+#include <fastcgi.h>
 using namespace std;
 
 int main() {
-  //printf("Running\n");
-  //TCPServer server(8080);
-  //for (int i = 0; i < 10; i++) {
-    //auto s = server.accept_client();
-    //printf("Accept\n");
-    //char buf[1024];
-    //s.get_content(buf, 1024);
-
-    //Response res;
-    //res.update_content("HelloWorld");
-    //cout << buf << endl;
-    //s << res.str();
-  //}
-  //}
-  //Request r;
-  //r.destr("subject");
-  //r.destr("Get /index.html?ace=1&&src=2 HTTP/1.1\r\na: 1\r\nb: 2\r\n\r\nHelloWorld");
-  //r.print();
-  TCPClient client("127.0.0.1", 8080);
-  cout << client.get_content() << endl;
+  //Client client("127.0.0.1", 8080);
+  //cout << client.recv() << endl;
+  //return 0;
+  Fastcgi cgi("127.0.0.1", 9000);
+  params_type params;
+  params["a"] = (const char *)"1";
+  params["b"] = (const char *)"2";
+  params["SCRIPT_FILENAME"] = "index.html";
+  const char *s = "HelloWorld";
+  cgi.send(0xffff, params, s);
+  cgi.recv();
+  cout << cgi.get_stdout() << endl;
   return 0;
 }
 

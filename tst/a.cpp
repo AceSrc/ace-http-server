@@ -238,6 +238,7 @@ int main(){
 
             if (rdlen == 0)
             {
+              printf("Finished\n");
                 break; //消息读取结束
             }
 
@@ -287,6 +288,7 @@ int main(){
 
                         // 获取paramName的长度
                         rdlen = read(connfd, &c, 1);  //先读取一个字节，这个字节标识 paramName 的长度
+                        printf("rdlen: %d length: %d\n", rdlen, (int)c);
                         contentLen -= rdlen;
 
                         if ((c & 0x80) != 0)  //如果 c 的值大于 128，则该 paramName 的长度用四个字节表示
@@ -313,6 +315,7 @@ int main(){
                             paramValueLen = c;
                         }
 
+                        printf("paramNameLen: %d paramValueLen: %d\n", paramNameLen, paramValueLen);
                         //读取paramName
                         paramName = (char *)calloc(paramNameLen + 1, sizeof(char));
                         rdlen = read(connfd, paramName, paramNameLen);
@@ -421,20 +424,28 @@ int main(){
         headerBuf.type = FCGI_STDOUT;
 
         htmlHead = "Content-type: text/html\r\n\r\n";  //响应头
+        //htmlBody = "Yes?";
         htmlBody = getParamValue(&paramNV, "SCRIPT_FILENAME");  // 把请求文件路径作为响应体返回
+        if (htmlBody == nullptr) htmlBody = "HelloWorld";
 
         printf("html: %s%s\n",htmlHead, htmlBody);
 
+        //printf("Before calculating contentLen\n");
         contentLen = strlen(htmlHead) + strlen(htmlBody);
-
+        //printf("Before headerBuf \n");
         headerBuf.contentLengthB1 = (contentLen >> 8) & 0xff;
         headerBuf.contentLengthB0 = contentLen & 0xff;
         headerBuf.paddingLength = (contentLen % 8) > 0 ? 8 - (contentLen % 8) : 0;  // 让数据 8 字节对齐
 
 
+        //printf("Before writing stdout header\n");
         write(connfd, &headerBuf, HEAD_LEN);
+        printf("Header_len: %d\n", HEAD_LEN);
+        //printf("After writing stdout header\n");
+        //printf("Before writing stdout \n");
         write(connfd, htmlHead, strlen(htmlHead));
         write(connfd, htmlBody, strlen(htmlBody));
+        //write(connfd, htmlHead, strlen(htmlHead));
 
         if (headerBuf.paddingLength > 0)
         {
@@ -449,6 +460,7 @@ int main(){
         headerBuf.contentLengthB0 = 0;
         headerBuf.paddingLength = 0;
         write(connfd, &headerBuf, HEAD_LEN);
+        printf("Finish stdout\n");
 
 
         // 发送结束请求消息头
@@ -462,6 +474,9 @@ int main(){
 
         write(connfd, &headerBuf, HEAD_LEN);
         write(connfd, &erBody, sizeof(erBody));
+
+        printf("Finish writing\n");
+
 
         close(connfd);
 

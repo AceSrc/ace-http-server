@@ -4,18 +4,17 @@
 #include <map>
 #include <regex>
 #include <string>
+#include <type.h>
 
 class Request {
-  typedef char * key_type;
-  typedef char * value_type;
 private:
   char *action;
   char *path;
   char *url;
   char *version;
 
-  std::map<key_type, value_type> params;
-  std::map<key_type, value_type> url_params;
+  params_type params;
+  params_type url_params;
 
   char *content;
 
