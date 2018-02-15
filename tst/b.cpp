@@ -28,19 +28,32 @@ const int inf = 2147483647;
 
 class T {
 public:
-  bool operator() (char * const &a, char * const &b) const {
-    return strcmp(a, b) < 0;
+  int a;
+  T() {
+    a = 10;
+    cout << "Empty construct" << endl;
+  }
+
+  //T(T &&x) {
+    //cout << "Move construct" << endl;
+  //}
+
+  T(const T&x) {
+    cout << "Copy construct" << endl;
+  }
+
+  ~T() {
+    cout << "Destruct" << endl;
   }
 } ;
 
-map<int, int> mp;
+T f() {
+  T rt;
+  return rt;
+}
 
 int main(int argc, char **argv) {
-  auto a = mp.find(1);
-  cout << (bool)(a == mp.end())  << endl;
-  mp[1] = 2;
-  a = mp.find(1);
-  cout << a->first << ' ' << a->second << endl;
-  a->second = 3;
-  cout << mp[1] << endl;
+  //T a(f());
+  f();
+  cout << "HelloWorld" << endl;
 }
