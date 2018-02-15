@@ -1,107 +1,108 @@
+#include <tools.h>
+#include <unistd.h>
 #include <tcp.h>
+#include <cstring>
+#include <iostream>
+using namespace std;
 
-Speaker::Speaker(int fd) : fd(fd), buf_size(DEFAULT_BUF_SIZE), buf(nullptr) {
-  //printf("%d\n", fcntl(fd, F_GETFD));
+Speaker::Speaker(int fd) : fd(fd), w_fd(0), buf_size(DEFAULT_BUF_SIZE), buf(nullptr), read_len(0), loaded_len(0) {
+  memset(is_vaild, false, sizeof(is_vaild));
 }
 
 void Speaker::setfd(int _fd) {
   fd = _fd;
 }
 
-//template <typename T>
-//void Speaker::send(const T &s) {
-  //write(fd, &s, sizeof(T));
-//}
+void Speaker::setwfd(int _fd) {
+  w_fd = _fd;
+}
 
 void Speaker::send(const char *s) {
-  write(fd, s, strlen(s));
+  if (!w_fd) write(fd, s, strlen(s));
+  else write(w_fd, s, strlen(s));
 }
 
 void Speaker::send(const char *s, int size) {
-  write(fd, s, size);
+  if (!w_fd) write(fd, s, size);
+  else write(w_fd, s, size);
 }
 
-//template<typename T>
-//T Speaker::recv() {
-  //T rt;
-  //void *p = (void *)&rt;
-  //int size = sizeof(T);
-  //int cur = 0;
-  //while (cur < size) {
-    //int current_read_len = read(fd, p, size - cur);
-    //p += current_read_len;
-    //cur += current_read_len;
-  //}
-  //return rt;
-//}
-
-char *Speaker::recv() {
-  if (buf == nullptr) buf = (char *)malloc(buf_size + 1);
-  char *p = buf;
-  int read_len = 0;
-  if (fcntl(fd, F_GETFD) == -1) {
-    printf("Socket invaild\n");
-    exit(1);
+void Speaker::recv_once() {
+  if (!buf) buf = (char *)malloc(buf_size); 
+  if (read_len == buf_size) {
+    buf_size *= 2;
+    buf = (char *)realloc(buf, buf_size); 
   }
+  int rd = 0;
+  while ((rd = read(fd, buf + read_len, buf_size - read_len)) == 0) {
+  }
+  read_len += rd;
+}
 
+char *Speaker::split(const char *s, int offset) {
+  for (int i = strlen(s) - 1; i >= 0; i--) 
+    if ((int)s[i] >= 0 && (int)s[i] <= CHAR_SET_SIZE) is_vaild[ (int)s[i] ] = true;
+
+  int test_len = 0;
   while (true) {
-    int current_read_len = read(fd, p, buf_size - read_len);
-    if (current_read_len < 0) {
-      printf("Failed to read\n");
-      exit(1);
-    }
-    if (current_read_len == 0) break;
-    read_len += current_read_len;
-    p += current_read_len;
-    if (read_len == buf_size) {
-      buf_size *= 2;
-      buf = (char *)realloc(buf, buf_size + 1);
-      p = buf + read_len;
-    }
+    if (test_len + loaded_len == read_len) recv_once();
+    if (is_vaild[ (int)*(buf + test_len + loaded_len) ]) break;
+    test_len++;
   }
-  *p = '\0';
-  return buf;
+  char *rt = buf + loaded_len + offset;
+  *(buf + test_len + loaded_len) = '\0';
+  loaded_len += test_len + 1;
+
+  for (int i = strlen(s) - 1; i >= 0; i--) 
+    if ((int)s[i] >= 0 && (int)s[i] <= CHAR_SET_SIZE) is_vaild[ (int)s[i] ] = false;
+  return bufdup(rt, test_len);
+}
+
+char Speaker::test(int inx) {
+  while (loaded_len + inx > read_len) recv_once();
+  return *(buf + loaded_len + inx);
+}
+
+void Speaker::skip(int offset) {
+  while (loaded_len + offset > read_len) recv_once();
+  loaded_len += offset;
 }
 
 char *Speaker::recv(int size) {
-  if (buf == nullptr) buf = (char *)malloc(buf_size + 1);
-  if (buf_size < size) {
-    buf_size = size;
-    buf = (char *)realloc(buf, buf_size);
-  }
-
-  char *p = buf;
-  int read_len = 0;
-  if (fcntl(fd, F_GETFD) == -1) {
-    printf("Socket invaild\n");
-    exit(1);
-  }
-
-  while (read_len < size) {
-    int current_read_len = read(fd, p, size - read_len);
-    read_len += current_read_len;
-    p += current_read_len;
-  }
-  *p = '\0';
-  return buf;
+  while (loaded_len + size > read_len) recv_once();
+  char *rt = buf + loaded_len;
+  loaded_len += size;
+  return bufdup(rt, size);
 }
 
 Speaker::~Speaker() {
-  close(fd);
-  free(buf);
+  if (fd) close(fd);
+  if (w_fd) close(w_fd);
+  if (buf) free(buf);
 }
 
 Speaker &Speaker::operator=(Speaker &&x) {
   this->fd = x.fd;
+  this->w_fd = x.w_fd;
   this->buf_size = x.buf_size;
   this->buf = x.buf;
+  this->read_len = x.read_len;
+  this->loaded_len = x.loaded_len;
   x.buf = nullptr;
+  x.fd = 0;
+  x.w_fd = 0;
   return *this;
 }
 
 Speaker::Speaker(Speaker &&x) {
   this->fd = x.fd;
+  this->w_fd = x.w_fd;
   this->buf_size = x.buf_size;
   this->buf = x.buf;
+  this->read_len = x.read_len;
+  this->loaded_len = x.loaded_len;
   x.buf = nullptr;
+  x.fd = 0;
+  x.w_fd = 0;
 }
+

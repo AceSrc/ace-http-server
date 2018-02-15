@@ -1,0 +1,273 @@
+<html>
+  <head>
+    <script type="text/javascript" src="skrollr.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <link rel="stylesheet" href="typingjs/typing.css">
+    <script src="typingjs/typing.js"></script>
+    <script src="parallax.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="weather/css/weather.min.css">          
+    <style>
+      .section {
+        position: relative;
+      }
+      .imgbox {
+        background: silver;
+        opacity: 0.2;
+        border-radius: 10px;
+        box-shadow: 10px 10px 10px gray;
+        width: 700px;
+        height: 450px;
+        position: absolute;
+      }
+      .shadow {
+        box-shadow: 10px 10px 10px gray;
+      }
+      .moon {
+        background-color: beige;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 4px solid beige;
+        box-shadow: 0px 0px 10px white;
+        position: absolute;
+        /* -moz-box-shadow: 0px 16px #999, 0px 16px 1px 1px #999; */
+      }
+      .moon-shadow {
+        background-color: rgba(0, 0, 0, 0);
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        box-shadow: 15px 15px 0px 0px white;
+        position: absolute;
+        opacity: 0.5;
+        /* -moz-box-shadow: 0px 16px #999, 0px 16px 1px 1px #999; */
+      }
+      
+      @import url(http://fonts.googleapis.com/css?family=Lora);
+      textbox::before {
+          background: url(./assets/images/bg1.jpg);
+      }
+      .textbox {
+          margin: 100px auto;
+          position: relative;
+          padding: 10px 5px;
+          background: rgba(255, 255, 255, 0.3);
+          font-size: 20px;
+          font-family: 'Lora', serif;
+          line-height: 1.5;
+          border-radius: 10px;
+          width: 60%;
+          box-shadow: 5px 3px 30px black;
+          overflow: hidden;
+      }
+      .textbox::before {
+          content: '';
+          margin: -35px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          -webkit-filter: blur(20px);
+          filter: blur(20px);
+          z-index: -1;
+      }
+      blockquote {
+          font-style: italic;
+      }
+      footer {
+          padding-top: 20px;
+          font-weight: bold;
+      }
+      cite {
+          font-style: normal;
+          font-size: 22px;
+      }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    
+  </head>
+
+  <body style="padding: 0; margin: 0;">
+    <div id="cover" class="loader">
+      <div class="loader-inner">
+        <div class="loader-line-wrap">
+          <div class="loader-line"></div>
+        </div>
+        <div class="loader-line-wrap">
+          <div class="loader-line"></div>
+        </div>
+        <div class="loader-line-wrap">
+          <div class="loader-line"></div>
+        </div>
+        <div class="loader-line-wrap">
+          <div class="loader-line"></div>
+        </div>
+        <div class="loader-line-wrap">
+          <div class="loader-line"></div>
+        </div>
+      </div>
+    </div>
+      
+
+
+    <div id='hello' style="opacity:0; position:absolute; width: 0;">
+        <span>Hello World</span>
+    </div>
+
+    <div id="section-1" class="section">
+      <div id="scene" style="position:absolute; right:0">
+        <div data-depth-x=".80" data-depth-y="0">
+            <img style="height: 100%;" src="./assets/images/bg1.jpg">
+        </div>
+      </div>
+      <div id="scene1" style="position: absolute; left: 15%; top: 50%">
+        <div data-depth-y="10.00" style="font-size: 100px">
+          <div id='hello-output'></div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="section-2" class="section">
+      <div id="scene3" style="position: absolute; right: 0;">
+          <div data-depth-x=".80" data-depth-y="0">
+            <img  style="height: 100%;" src="./assets/images/bg2.jpg">
+          </div>
+      </div>
+      <div id="scene2" style="position: absolute; left: 15%; top: 20%; width: 500px; height: 500px;">
+        <div class="textbox" data-depth="1.6">
+          Text
+        </div>
+      </div>
+      <div data-anchor-target="#section-2" data-top-top="left: 0;" data-bottom-top="left: -100%;" data-top-bottom="left: -100%" id="ed" style="position: absolute; bottom: 0;">
+        <img src="./assets/images/ed.jpg">
+      </div>
+      <div data-anchor-target="#section-2" data-top-top="right: 0;" data-bottom-top="right: -100%;" data-top-bottom="right: -100%" style="position: absolute; top: 0;">
+        <div class="imgbox"></div>
+        <img src="./assets/images/zhihu.jpg" style="margin: 0 auto;"></img>
+      </div>
+      <div data-anchor-target="#section-2" 
+        class="moon" 
+        data-top-top="left: 50%; top: 0%;" 
+        data-bottom-top="left: 0%; top: 100%; background-color: rgb(0,0,255);" 
+        data-top-bottom="left: 30%; top: 120%; background-color:rgb(255,0,255);" 
+        style="position: absolute; z-index:1;">
+        <div id="moon">
+          <div data-depth="1.60" class="moon-shadow"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="section-3" class="section">
+      <div id="scene4" style="position: absolute; right: 0;">
+          <div data-depth-x=".80" data-depth-y="0">
+            <img style="height: 100%;" src="./assets/images/bg3.jpg">
+          </div>
+      </div>
+      <div id="scene6" style="z-index: 100; position: absolute; left: 15%; top: 15%; width: 500px; height: 500px;">
+        <div class="textbox" data-depth="1.6">
+          Text
+        </div>
+      </div>
+    </div>  
+    <div id="section-4" class="section weather snow">
+      <div id="scene5" style="position: absolute; right: 0;">
+          <div data-depth-x=".80" data-depth-y="0">
+            <img style="height: 100%;" src="./assets/images/bg4.jpg">
+          </div>
+      </div>
+      <div id="scene7" style="z-index: 100; position: absolute; left: 15%; top: 15%; width: 500px; height: 500px;">
+        <div class="textbox" data-depth="1.6">
+          Text
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.body.style.overflow='hidden';
+      $(".section").css({"width": document.body.clientWidth, "height": document.body.clientHeight})
+    </script>
+    <script>
+      var scene = document.getElementById('scene');
+      var parallax = new Parallax(scene);
+      var scene1 = document.getElementById('scene1');
+      var parallax1 = new Parallax(scene1);
+      var scene2 = document.getElementById('scene2');
+      var parallax2 = new Parallax(scene2);
+      var scene3 = document.getElementById('scene3');
+      var parallax3 = new Parallax(scene3);
+      var scene4 = document.getElementById('scene4');
+      var parallax4 = new Parallax(scene4);
+      var scene5 = document.getElementById('scene5');
+      var parallax5 = new Parallax(scene5);
+      var scene6 = document.getElementById('scene6');
+      var parallax6 = new Parallax(scene6);
+      var scene7 = document.getElementById('scene7');
+      var parallax7 = new Parallax(scene7);
+
+      
+      var scene_moon = document.getElementById('moon');
+      var parallax_moon = new Parallax(scene_moon);
+      
+      var typing = new Typing({
+        source: document.getElementById('hello'),
+        output: document.getElementById('hello-output'),
+        delay: 120,
+        done: function() {}
+      });
+      $(document).ready(function() { 
+        document.body.scrollTop = 0;
+        $("#cover").fadeOut(2000);
+        typing.start();
+      }); 
+
+      function a(){
+        $("#ed").animate({bottom: 100}, 1000).animate({bottom: 0}, 1000).animate({bottom:0}, 1000, function(){
+            a();
+        });
+      }
+      a();
+    </script>
+
+    <script type="text/javascript">
+      var s = skrollr.init();
+    </script>
+    <script type="text/javascript">
+      window.onmousewheel = document.onmousewheel = settop;
+
+      var before_scroll = document.body.scrollTop;
+      var index = 0;
+      var locked = false;
+      var unit = document.body.clientHeight;
+      function unlocked() {
+        locked = false;
+        before_scroll = document.body.scrollTop;
+      }
+
+      function settop(e) {
+        e.preventDefault();
+        if (locked) return ;
+        e = e || window.event;
+        var delta = e.wheelDelta;
+        if (delta < 0) {
+          index += 1;
+          if (index > 3) index = 3;
+          else {
+            locked = true;
+            $("body, html").animate({scrollTop: unit * index}, 1500, unlocked);
+          }
+        }
+        else if (delta > 0) {
+          index -= 1;
+          if (index < 0) index = 0;
+          else {
+            locked = true;
+            $("body, html").animate({scrollTop: unit * index}, 1500, unlocked);
+          }
+        }
+      }
+    </script>  
+  </body>
+</html>

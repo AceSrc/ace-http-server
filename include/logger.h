@@ -18,17 +18,18 @@ class Logger {
   //typedef std::unique_ptr<Log> uptr;
   Buffer buffer;
 private:
-  char *ip;
+  const char *ip;
   int port;
 
   Queue<Buffer> *q;
 
 public:
-  Logger(Queue<Buffer> *_q);
+  Logger(Queue<Buffer> *_q = nullptr);
   ~Logger();
   
   //void open(const char *s);
   Logger &operator <<(const char *s);
+  void format(const char *format, ...);
 } ;
 
 class Writer {

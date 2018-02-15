@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="onepage-scroll.css "> </link>
+    <script src="jquery.min.js"></script>
+    <script src="jquery.onepage-scroll.min.js"></script>
+    <link rel="stylesheet" href="typingjs/typing.css">
+    <script src="typingjs/typing.js"></script>
+    <script src="jqfloat/jqfloat.js"></script>
+  </head>
+
+  <body>
+    <div id='hello' style="opacity:0; position:absolute;">
+      <span>Hello World</span>
+    </div>
+    <div class="main">
+      <section> 
+          <div id="container" class="container">
+              <div id="scene" style="position:absolute; right:0">
+                <div data-depth-x=".80" data-depth-y="0">
+                    <img style="height: 100%;" src="./assets/images/bg1.jpg">
+                </div>
+              </div>
+              <div id="scene1" style="position: absolute; left: 15%; top: 50%">
+                <div data-depth-y="10.00" style="font-size: 100px">
+                  <div id='hello-output'></div>
+                </div>
+              </div>
+            </div>
+      </section>
+      <section>
+        <div id="ed" style="position: absolute; bottom: 0">
+          <img src="./assets/images/ed.jpg">
+        </div>
+      </section>
+      <section>
+
+      </section>
+    </div>
+
+    <script src="parallax.min.js"></script>
+    <script>
+      var scene = document.getElementById('scene');
+      var parallax = new Parallax(scene);
+      var scene1 = document.getElementById('scene1');
+      var parallax1 = new Parallax(scene1);
+
+      var typing = new Typing({
+        source: document.getElementById('hello'),
+        output: document.getElementById('hello-output'),
+        delay: 120,
+        done: function() {}
+      });
+      typing.start();
+
+      function a(){
+        $("#ed").animate({bottom: 100}, 1000).animate({bottom: 0}, 1000).animate({bottom:0}, 1000, function(){
+            a();
+        });
+      }
+      a();
+
+      $(".main").onepage_scroll({
+        sectionContainer: "section",     // sectionContainer accepts any kind of selector in case you don't want to use section
+        easing: "ease",                  // Easing options accepts the CSS3 easing animation such "ease", "linear", "ease-in",
+                                          // "ease-out", "ease-in-out", or even cubic bezier value such as "cubic-bezier(0.175, 0.885, 0.420, 1.310)"
+        animationTime: 1000,             // AnimationTime let you define how long each section takes to animate
+        pagination: true,                // You can either show or hide the pagination. Toggle true for show, false for hide.
+        updateURL: false,                // Toggle this true if you want the URL to be updated automatically when the user scroll to each page.
+        beforeMove: function(index) {},  // This option accepts a callback function. The function will be called before the page moves.
+        afterMove: function(index) {},   // This option accepts a callback function. The function will be called after the page moves.
+        loop: false,                     // You can have the page loop back to the top/bottom when the user navigates at up/down on the first/last page.
+        keyboard: true,                  // You can activate the keyboard controls
+        responsiveFallback: false,        // You can fallback to normal page scroll by defining the width of the browser in which
+                                          // you want the responsive fallback to be triggered. For example, set this to 600 and whenever
+                                          // the browser's width is less than 600, the fallback will kick in.
+        direction: "vertical"            // You can now define the direction of the One Page Scroll animation. Options available are "vertical" and "horizontal". The default value is "vertical".  
+      });
+    </script>
+
+  </body>
+</html>

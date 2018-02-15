@@ -1,6 +1,3 @@
-#include <functional>
-#include <memory>
-#include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 #include <string.h>
@@ -31,24 +28,19 @@ const int inf = 2147483647;
 
 class T {
 public:
-  T() {
-    cout << "Construct" << endl;
-  }
-  ~T() {
-    cout << "Destroyed" << endl;
+  bool operator() (char * const &a, char * const &b) const {
+    return strcmp(a, b) < 0;
   }
 } ;
 
-typedef unique_ptr<T> uptr;
+map<int, int> mp;
 
 int main(int argc, char **argv) {
-  queue<uptr> q;
-  q.push(uptr(new T));
-
-  uptr a = std::move(q.front());
-  uptr b = std::move(q.front());
-  if (!b) cout << "!b" << endl;
-  if (!a) cout << "!a" << endl;
-  q.pop();
-  return 0;
+  auto a = mp.find(1);
+  cout << (bool)(a == mp.end())  << endl;
+  mp[1] = 2;
+  a = mp.find(1);
+  cout << a->first << ' ' << a->second << endl;
+  a->second = 3;
+  cout << mp[1] << endl;
 }

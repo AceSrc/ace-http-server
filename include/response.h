@@ -4,6 +4,10 @@
 #include <code.h>
 #include <sstream>
 #include <map>
+#include <type.h>
+#include <buffer.h>
+#include <request.h>
+#include <speaker.h>
 
 
 extern const char *DEFAULT_HTTP_VERSION;
@@ -12,28 +16,28 @@ extern const char *DEFAULT_DESCRIPTION;
 extern const char *HTTP_END_LINE;
 
 class Response {
-  typedef std::string key_type;
-  typedef std::string value_type;
-
 private:
   const char *http_version;
   int status_code;
   const char *description;
 
-  std::string content;
+  //char *header;
+  char *content;
+  params_type params;
+  Request *request;
+  Speaker *speaker;
 
-  std::map<key_type, value_type> params;
+  void update_response();
+  void get_fastcgi_response(const char *suffix);
+  void get_resource();
+  int content_size;
 
-  std::string get_localtime();
-  std::string params_str();
-  void update_params();
-
+  void update_param(const char *key, const char *val);
+  void update_param(const char *key, const int val);
 public:
-  Response();
-
-  char *c_str();
-  std::string str();
-  void update_content(const char *s);
+  Response(Request *request = nullptr, Speaker *speaker = nullptr);
+  void send_resource();
 } ;
 
 #endif
+

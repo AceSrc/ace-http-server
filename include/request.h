@@ -1,13 +1,12 @@
 #ifndef __REQUEST_H__
 #define __REQUEST_H__
 
-#include <map>
-#include <regex>
 #include <string>
+#include <speaker.h>
 #include <type.h>
 
 class Request {
-private:
+public:
   char *action;
   char *path;
   char *url;
@@ -16,15 +15,21 @@ private:
   params_type params;
   params_type url_params;
 
+  //params_type GLOBALS;
   char *content;
 
   char *buf;
   char *url_buf;
   void deurl(const char *s);
-public:
+
+  Speaker *speaker;
+
   Request();
-  void destr(const char *s);
+  Request(Speaker * const speaker);
+  ~Request();
+  void destr();
   void print();
 } ;
 
 #endif
+

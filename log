@@ -1,8 +1,4 @@
- 2018-02-13 HelloWorld
- 2018-02-13 HelloWorld
- 2018-02-13 HelloWorld
- 2018-02-13 HelloWorld
- 2018-02-13 HelloWorld
- 2018-02-13 HelloWorld
- 2018-02-13 09:37:13 PM: HelloWorld
- 2018-02-13 21:38:06: HelloWorld
+GET /index.html http/1.1
+Content-Length: 10
+
+HelloWorld

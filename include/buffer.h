@@ -15,6 +15,9 @@ public:
   void append(const char *s, int wrlen = -1);
   char *str(int offset = 0) const;
   int size() const;
+
+  Buffer &operator<<(const char *s);
+  Buffer &operator<<(const int &x);
 } ;
 
 #endif

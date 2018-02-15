@@ -16,5 +16,5 @@ Client::Client(const char *ip, int proxy) {
 }
 
 char *Client::recv() {
-  return speaker.recv();
+  //return speaker.recv();
 }

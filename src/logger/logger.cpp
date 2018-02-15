@@ -2,10 +2,13 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdarg.h>
 
-Logger::Logger(Queue<Buffer> *_q) : q(_q) {}
+#include <iostream>
+using namespace std;
+Logger::Logger(Queue<Buffer> *_q) : ip(NULL), q(_q) {}
 Logger::~Logger() {
-  if (ip) free(ip);
+  if (ip) free((void *)ip);
 }
 
 #include <iostream>
@@ -24,6 +27,15 @@ Logger &Logger::operator <<(const char *s) {
   buf->append("\n");
   q->push(std::unique_ptr<Buffer>(buf));
   return *this;
+}
+
+void Logger::format(const char *format, ...) {
+  char buf[1024];
+  va_list ap;
+  va_start(ap, format);
+  vsprintf(buf, format, ap);
+  *this << buf;
+  va_end(ap);
 }
 
 //void Logger::open(const char *s) {
@@ -82,3 +94,4 @@ void Writer::set_file(const char *s) {
   if (fd) close(fd);
   fd = open(s, O_RDWR | O_APPEND);
 }
+

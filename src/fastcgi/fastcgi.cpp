@@ -24,7 +24,7 @@ void Fastcgi::send_request_header(uchar type, ushort requestId, ushort contentLe
   header.contentLengthB0 = contentLength & MASK;
   header.paddingLength = ZERO_BYTE;
   header.reserved = ZERO_BYTE;
-  speaker.send<FCGI_Header>(header);
+  speaker.send_struct<FCGI_Header>(header);
 }
 
 void Fastcgi::send_begin_request(ushort requestId, ushort role, uchar flag) {
@@ -33,7 +33,7 @@ void Fastcgi::send_begin_request(ushort requestId, ushort role, uchar flag) {
   body.roleB0 = role & MASK;
   body.flags = flag;
   send_request_header(FCGI_BEGIN_REQUEST, requestId, (ushort)sizeof(body));
-  speaker.send<FCGI_BeginRequestBody>(body);
+  speaker.send_struct<FCGI_BeginRequestBody>(body);
 }
 
 static uint transform(uint x) {
@@ -66,7 +66,8 @@ void Fastcgi::send_content(uchar type, ushort requestId, const Buffer &buffer) {
   //printf("Sending content\n");
   int sent_len = 0;
   while (sent_len < buffer.size()) {
-    int current_sent_len = min(MAX_CONTENT_LENGTH, buffer.size() - sent_len);
+    int current_sent_len = buffer.size() - sent_len;
+    if (MAX_CONTENT_LENGTH < current_sent_len) current_sent_len = MAX_CONTENT_LENGTH;
     send_request_header(type, requestId, current_sent_len);
     speaker.send(buffer.str(sent_len), current_sent_len);
     sent_len += current_sent_len;
@@ -75,6 +76,8 @@ void Fastcgi::send_content(uchar type, ushort requestId, const Buffer &buffer) {
   send_request_header(type, requestId, 0);
 }
 
+//#include <iostream>
+//using namespace std;
 void Fastcgi::send_params(ushort requestId, const params_type &params) {
   Buffer buffer;
   char len_buf[5];
@@ -83,6 +86,7 @@ void Fastcgi::send_params(ushort requestId, const params_type &params) {
     calc_param_len(i->second, len_buf, buffer);
     buffer.append(i->first);
     buffer.append(i->second);
+    //cout << i->first << '=' << i->second << endl;
   }
 
   //char *p = buffer.str();
@@ -92,6 +96,8 @@ void Fastcgi::send_params(ushort requestId, const params_type &params) {
     //printf("[%u] ", (unsigned char)p[i]);
   //}
 
+  printf("%s\n", buffer.str());
+  //cout << buffer.str() << endl;
   send_content(FCGI_PARAMS, requestId, buffer);
 }
 
@@ -102,12 +108,12 @@ void Fastcgi::send_stdin(ushort requestId, const char *s) {
 }
 
 FCGI_Header Fastcgi::recv_header() {
-  return speaker.recv<FCGI_Header>();
+  return speaker.recv_struct<FCGI_Header>();
 }
 
 static void copy_to(char *&p, const char *s) {
   int size = strlen(s);
-  if (!p) free(p);
+  if (p) free(p);
   p = (char *)malloc(size + 1);
   memcpy(p, s, size + 1);
 }
@@ -117,29 +123,35 @@ static int calc_contentLength(const FCGI_Header &header) {
 }
 
 void Fastcgi::recv() {
-  Buffer buffer;
+  Buffer stdout_buffer;
+  Buffer stderr_buffer;
   while (true) {
     auto header = recv_header(); 
-    //printf("version: %d type: %d\n length: 0x%02x%02x(%d)\n", header.version, header.type, header.contentLengthB1, header.contentLengthB0, calc_contentLength(header));
+    printf("version: %d type: %d\n length: 0x%02x%02x(%d) paddinglength: 0x%02x\n", header.version, header.type, header.contentLengthB1, header.contentLengthB0, calc_contentLength(header), header.paddingLength);
     if (header.type == FCGI_END_REQUEST) {
-      speaker.recv<FCGI_EndRequestBody>();
-      return ;
+      speaker.recv_struct<FCGI_EndRequestBody>();
+      break;
     }
     if (calc_contentLength(header) == 0) {
-      if (header.type == FCGI_STDOUT) {
-        copy_to(response_stdout, buffer.str());
-        //printf("")
-        //printf("%s\n", response_stdout);
-      }
-      else if (header.type == FCGI_STDERR) copy_to(response_stderr, buffer.str());
-      else {printf("Invaild type %d\n", header.type); exit(1);}
-      buffer.clear();
       continue;
     }
-    buffer.append(speaker.recv(calc_contentLength(header)));
-    //printf("%d\n", buffer.size());
+    if (header.type == FCGI_STDOUT) {
+      stdout_buffer.append(speaker.recv(calc_contentLength(header)));
+      //cout << stdout_buffer.size() << ' ' << stdout_buffer.str() << endl;
+    }
+    else if (header.type == FCGI_STDERR) 
+      stderr_buffer.append(speaker.recv(calc_contentLength(header)));
+    else {
+      printf("Invaild type %d\n", header.type);
+      exit(1);
+    }
     speaker.recv(header.paddingLength);
   }
+  copy_to(response_stdout, stdout_buffer.str());
+  copy_to(response_stderr, stderr_buffer.str());
+  //printf("%s\n", response_stdout);
+  //printf("%s\n", response_stderr);
+
 }
 
 void Fastcgi::send(ushort requestId, const params_type &params, const char *s) {
@@ -156,8 +168,14 @@ Fastcgi::Fastcgi(const char *ip, int proxy) : response_stdout(nullptr), response
   addr.sin_port = htons(proxy);
 
   int clientfd = socket(PF_INET, SOCK_STREAM, 0);
-  connect(clientfd, (sockaddr *)&addr, sizeof(sockaddr));
+  //printf("%s %d\n", ip, proxy);
+  if (connect(clientfd, (sockaddr *)&addr, sizeof(sockaddr)) == -1) {
+    printf("Can't connect to(%d)\n", errno);
+    printf("%s\n", strerror(errno));
+    exit(1);
+  }
   speaker.setfd(clientfd);
+  speaker.setwfd(clientfd);
 }
 
 Fastcgi::~Fastcgi() {
@@ -165,6 +183,7 @@ Fastcgi::~Fastcgi() {
 }
 
 char *Fastcgi::get_stdout() const {
+  //printf("%s\n", response_stdout);
   return response_stdout;
 }
 

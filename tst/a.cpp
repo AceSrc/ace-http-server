@@ -188,6 +188,13 @@ int main(){
     servaddr.sin_port = htons(9000);
     servaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 
+
+  int iSockOptVal = 1;
+  if (setsockopt(servfd, SOL_SOCKET, SO_REUSEADDR, &iSockOptVal, sizeof(iSockOptVal)) == -1) {
+    printf("Failed to setsockopt\n");
+    exit(1);
+  }
+
     ret = bind(servfd, (struct sockaddr *)&servaddr, slen);
 
     if (ret == -1)
@@ -213,12 +220,15 @@ int main(){
             break;
         }
 
-        fcntl(connfd, F_SETFL, O_NONBLOCK); // 设置socket为非阻塞
+        //fcntl(connfd, F_SETFL, O_NONBLOCK); // 设置socket为非阻塞
 
         init_paramNV(&paramNV);
 
+
+        bool ok = false;
         while (1) {
 
+            if (ok) break;
             //读取消息头
             bzero(&header, HEAD_LEN);
             rdlen = read(connfd, &header, HEAD_LEN);
@@ -238,7 +248,7 @@ int main(){
 
             if (rdlen == 0)
             {
-              printf("Finished\n");
+                printf("Finished\n");
                 break; //消息读取结束
             }
 
@@ -249,10 +259,10 @@ int main(){
             paddingLen = header.paddingLength;
 
 
-            printf("version = %d, type = %d, requestId = %d, contentLen = %d, paddingLength = %d\n",
-                   header.version, header.type, requestId, contentLen, paddingLen);
+            //printf("version = %d, type = %d, requestId = %d, contentLen = %d, paddingLength = %d\n",
+                   //header.version, header.type, requestId, contentLen, paddingLen);
 
-            printf("%lx\n", header);
+            //printf("%lx\n", header);
 
 
             switch (header.type) {
@@ -264,17 +274,17 @@ int main(){
                     bzero(&brBody, sizeof(brBody));
                     read(connfd, &brBody, sizeof(brBody));
 
-                    printf("role = %d, flags = %d\n", (brBody.roleB1 << 8) + brBody.roleB0, brBody.flags);
+                    //printf("role = %d, flags = %d\n", (brBody.roleB1 << 8) + brBody.roleB0, brBody.flags);
 
                     break;
 
                 case FCGI_PARAMS:
-                    printf("begin read params...\n");
+                    //printf("begin read params...\n");
 
                     // 消息头中的contentLen = 0 表明此类消息已发送完毕
                     if (contentLen == 0)
                     {
-                        printf("read params end...\n");
+                        printf("____________FCGI_PARAMS_END______________\n");
                     }
 
                     //循环读取键值对
@@ -288,7 +298,7 @@ int main(){
 
                         // 获取paramName的长度
                         rdlen = read(connfd, &c, 1);  //先读取一个字节，这个字节标识 paramName 的长度
-                        printf("rdlen: %d length: %d\n", rdlen, (int)c);
+                        //printf("rdlen: %d length: %d\n", rdlen, (int)c);
                         contentLen -= rdlen;
 
                         if ((c & 0x80) != 0)  //如果 c 的值大于 128，则该 paramName 的长度用四个字节表示
@@ -315,7 +325,7 @@ int main(){
                             paramValueLen = c;
                         }
 
-                        printf("paramNameLen: %d paramValueLen: %d\n", paramNameLen, paramValueLen);
+                        //printf("paramNameLen: %d paramValueLen: %d\n", paramNameLen, paramValueLen);
                         //读取paramName
                         paramName = (char *)calloc(paramNameLen + 1, sizeof(char));
                         rdlen = read(connfd, paramName, paramNameLen);
@@ -326,7 +336,7 @@ int main(){
                         rdlen = read(connfd, paramValue, paramValueLen);
                         contentLen -= rdlen;
 
-                        printf("read param: %s=%s\n", paramName, paramValue);
+                        printf("%s=%s\n", paramName, paramValue);
 
                         if (paramNV.curLen == paramNV.maxLen)
                         {
@@ -349,12 +359,14 @@ int main(){
                     break;
 
                 case FCGI_STDIN:
-                    printf("begin read post...\n");
+                    //printf("................\n");
 
                     if(contentLen == 0)
                     {
-                        printf("read post end....\n");
-                    }
+                        printf("_____________FCGI_STDIN_END_______________\n");
+                        ok = true;
+                        break;
+                   }
 
                     if (contentLen > 0)
                     {
@@ -420,6 +432,7 @@ int main(){
         /* 以上是从web服务器读取数据，下面向web服务器返回数据 */
 
 
+        printf("Start writing...\n");
         headerBuf.version = FCGI_VERSION_1;
         headerBuf.type = FCGI_STDOUT;
 
@@ -437,10 +450,11 @@ int main(){
         headerBuf.contentLengthB0 = contentLen & 0xff;
         headerBuf.paddingLength = (contentLen % 8) > 0 ? 8 - (contentLen % 8) : 0;  // 让数据 8 字节对齐
 
-
+       printf("version: %d type: %d\n length: 0x%02x%02x paddingLength: 0x%02x\n", headerBuf.version, headerBuf.type, headerBuf.contentLengthB1, headerBuf.contentLengthB0, headerBuf.paddingLength);
+    
         //printf("Before writing stdout header\n");
         write(connfd, &headerBuf, HEAD_LEN);
-        printf("Header_len: %d\n", HEAD_LEN);
+        //printf("Header_len: %d\n", HEAD_LEN);
         //printf("After writing stdout header\n");
         //printf("Before writing stdout \n");
         write(connfd, htmlHead, strlen(htmlHead));
@@ -449,6 +463,7 @@ int main(){
 
         if (headerBuf.paddingLength > 0)
         {
+          printf("Sending padding...\n");
             write(connfd, buf, headerBuf.paddingLength);  //填充数据随便写什么，数据会被服务器忽略
         }
 
@@ -459,6 +474,7 @@ int main(){
         headerBuf.contentLengthB1 = 0;
         headerBuf.contentLengthB0 = 0;
         headerBuf.paddingLength = 0;
+       printf("version: %d type: %d\n length: 0x%02x%02x\n", headerBuf.version, headerBuf.type, headerBuf.contentLengthB1, headerBuf.contentLengthB0);
         write(connfd, &headerBuf, HEAD_LEN);
         printf("Finish stdout\n");
 

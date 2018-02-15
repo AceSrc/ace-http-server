@@ -5,7 +5,10 @@
 #include <cstring>
 #include <cstdlib>
 
-Request::Request() : action(NULL), path(NULL), version(NULL), content(NULL), buf(NULL), url_buf(NULL) {
+Request::Request() : action(NULL), path(NULL), version(NULL), content(NULL), buf(NULL), url_buf(NULL), speaker(NULL) {
+}
+
+Request::Request(Speaker *const speaker) : action(NULL), path(NULL), version(NULL), content(NULL), buf(NULL), url_buf(NULL), speaker(speaker) {
 }
 
 using namespace std;
@@ -18,7 +21,7 @@ static char *move_until(char *&p, const char *pattern) {
     if (strncmp(p, pattern, size) == 0) {
       *p = '\0';
       p += size;
-      return rt;
+      return strdup(rt);
     }
     ++p;
   }
@@ -34,50 +37,42 @@ void Request::deurl(const char *s) {
   char *p = url_buf;
 
   path = move_until(p, "?");
-  if (!path) return ;
+  if (!path) {
+    path = strdup(s); 
+    return ;
+  }
 
   while (true) {
     char *key = move_until(p, "=");
     char *value = move_until(p, "&&");
     if (value == nullptr) {
-      value = p;
-      url_params[key] = value;
       break;
     }
     url_params[key] = value;
   }
+  free(url_buf);
 }
 
-void Request::destr(const char *s) {
-  int size = strlen(s) + 1;
-  if (!buf) buf = (char *)malloc(size);
-  else buf = (char *)realloc(buf, size);
-  memcpy(buf, s, size);
-  char *p = buf;
-
-  action = move_until(p, " ");
-  url = move_until(p, " ");
-  version = move_until(p, "\r\n");
+void Request::destr() {
+  action = speaker->split(" ");
+  url = speaker->split(" ");
+  version = speaker->split("\r");
 
   while (true) {
-    if (p[0] == '\r' && p[1] == '\n') {
-      p += 2;
-      break;
-    }
-    char *key = nullptr, *value = nullptr;
-    key = move_until(p, ": ");
-    if (key == nullptr) break;
-    value = move_until(p, "\r\n");
-    params[key] = value;
+    if (speaker->test(1) == '\r') break;
+    char *key = speaker->split(":", 1);
+    char *val = speaker->split("\r", 1);
+    params[key] = val;
   }
-  content = move_until(p, "");
 
+  if (params.count("Content-Length"))
+    content = speaker->recv(atoi(params["Content-Length"])) + 3;
   deurl(url);
 }
 
 void Request::print() {
   printf("--------------------------------------\n");
-  printf("%s\n%s\n%s\n\n", action, path, version);
+  printf("%s\n%s\n%s\n\n", action, url, version);
   for (auto i = params.begin(); i != params.end(); i++) 
     printf("%s: %s\n", i->first, i->second);
   printf("**************************************\n");
@@ -86,4 +81,15 @@ void Request::print() {
   printf("**************************************\n");
   printf("\n%s\n", content);
   printf("--------------------------------------\n");
+}
+
+Request::~Request() {
+  for (auto i = params.begin(); i != params.end(); i++) {
+    if (i->first) free((void *)i->first);
+    if (i->second) free((void *)i->second);
+  }
+  for (auto i = url_params.begin(); i != url_params.end(); i++) {
+    if (i->first) free((void *)i->first);
+    if (i->second) free((void *)i->second);
+  }
 }
