@@ -1,3 +1,0 @@
-const int SUCCESSFUL_RESPONSE = 200;
-
-

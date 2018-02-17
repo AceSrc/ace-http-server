@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <request.h>
 #include <response.h>
+#include <string>
 
 Server::Server(int port) {
   servfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -41,8 +42,8 @@ User Server::accept_client() {
   while ((conn = accept(servfd, (struct sockaddr*)&client_addr, &length)) == -1) {
     printf("Failed to connected... Try another work...\n");
   }
-  logger.format("connect fd: %d", conn);
-  return User(conn, &message_queue);
+  //logger.format("connect fd: %d", conn);
+  return User(conn, &message_queue, std::string(inet_ntoa(client_addr.sin_addr)), ntohs(client_addr.sin_port));
 }
 
 //#include <iostream>

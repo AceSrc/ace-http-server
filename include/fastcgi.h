@@ -3,7 +3,6 @@
 
 #include <tcp.h>
 #include <type.h>
-#include <buffer.h>
 
 enum fcgi_request_type {
   FCGI_BEGIN_REQUEST = 1,
@@ -67,24 +66,24 @@ struct FCGI_EndRequestBody {
 class Fastcgi {
 private:
   Speaker speaker;
-  char *response_stdout;
-  char *response_stderr;
+  std::string response_stdout;
+  std::string response_stderr;
 
   void send_request_header(uchar type, ushort requestId, ushort contentLength);
-  void send_content(uchar type, ushort requestId, const Buffer &buffer);
+  void send_content(uchar type, ushort requestId, const std::string &buffer);
   void send_begin_request(ushort requestId, ushort role, uchar flag);
   void send_params(ushort requestId, const params_type &params);
-  void send_stdin(ushort requestId, const char *s);
+  void send_stdin(ushort requestId, const std::string &s);
 
   FCGI_Header recv_header();
 public:
-  Fastcgi(const char *ip, int proxy = 9000);
+  Fastcgi(const std::string &ip, int proxy = 9000);
   ~Fastcgi();
-  void send(ushort requestId, const params_type &params, const char *s);
+  void send(ushort requestId, const params_type &params, const std::string &s);
 
   void recv();
-  char *get_stdout() const;
-  char *get_stderr() const;
+  std::string get_stdout() const;
+  std::string get_stderr() const;
 } ;
 #endif
 

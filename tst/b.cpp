@@ -29,31 +29,38 @@ const int inf = 2147483647;
 class T {
 public:
   int a;
-  T() {
-    a = 10;
+  char *p;
+  T(int value = 10) {
+    a = value;
+    p = (char *)malloc(120);
+    p = "Hello";
     cout << "Empty construct" << endl;
   }
 
-  //T(T &&x) {
+  T(T &&x) = default;
+  //{
     //cout << "Move construct" << endl;
   //}
 
+  T &operator=(T &&x) = default;
   T(const T&x) {
     cout << "Copy construct" << endl;
   }
 
   ~T() {
+    free(p);
     cout << "Destruct" << endl;
   }
 } ;
 
-T f() {
+T f(T a) {
+  //cout << a.p << endl;
   T rt;
   return rt;
 }
 
 int main(int argc, char **argv) {
-  //T a(f());
-  f();
-  cout << "HelloWorld" << endl;
+  string s = "Hello";
+  cout << s.substr(string::npos) << endl;
 }
+

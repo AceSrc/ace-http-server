@@ -5,93 +5,70 @@
 #include <stdarg.h>
 
 #include <iostream>
-using namespace std;
-Logger::Logger(Queue<Buffer> *_q) : ip(NULL), q(_q) {}
+
+Logger::Logger(message_queue_type *_q, const std::string &ip, const int port) : q(_q), ip(ip), port(port) {}
+
 Logger::~Logger() {
-  if (ip) free((void *)ip);
 }
 
-#include <iostream>
-using namespace std;
-Logger &Logger::operator <<(const char *s) {
+Logger &Logger::operator <<(const std::string &s) {
   const int BUFLEN = 30;
   char buffer[BUFLEN];
   time_t t = time(0);
   strftime(buffer, BUFLEN, " %F %T ", localtime(&t));
+
+  //std::cout << ip << ' ' << port << ' ' << buffer << ' ' << s << std::endl;
  
-  Buffer *buf = new Buffer();
-  //cout << buf << ' ' << ip << endl;
-  if (ip) buf->append(ip);
-  buf->append(buffer);
-  buf->append(s);
-  buf->append("\n");
-  q->push(std::unique_ptr<Buffer>(buf));
+  //std::cout << "Before " << s << std::endl;
+  ss.str("");
+  ss << ip << ' ' << port << ' ' << buffer << ' ' << s << std::endl;
+  //std::cout << "After " << s << std::endl;
+  //std::cout << ss.str() << std::endl;
+  q->push(uptr(new std::string(ss.str())));
   return *this;
 }
 
 void Logger::format(const char *format, ...) {
+  /* TODO: buffer safety */
   char buf[1024];
   va_list ap;
   va_start(ap, format);
   vsprintf(buf, format, ap);
-  *this << buf;
+  *this << std::string(buf);
   va_end(ap);
 }
 
-//void Logger::open(const char *s) {
-  //if (fd) close(fd);
-  //fd = open(s, O_APPEND);
-  //if (fcntl(fd, F_GETFD) == -1) {
-    //printf("Can't open log file\n");
-    //return ;
-  //}
-//}
-
-//void Logger::handle(const uptr &ptr) {
-  //write(fd, ptr.get()->str(), ptr.get()->size());
-  //ptr.release();
-//}
-
-Writer::Writer(Queue<Buffer> *_q) : fd(0), is_running(false), q(_q) {
+Writer::Writer(message_queue_type *_q) : is_running(false), q(_q) {
 }
 
 Writer::~Writer() {
-  if (fd) {close(fd); cout << "Close" << endl;}
 }
 
 void Writer::start() {
   is_running = true;
-  //std::unique_lock<std::mutex> lock(m);
-  //lock.unlock();
 
   while (true) {
-    //lock.lock();
-    //cv.wait(lock);
     auto ptr = q->pop();
-    if (!is_running) break;
     if (ptr) handle(std::move(ptr));
+    else if (!is_running) break;
   }
 }
 
 bool Writer::stop() {
   is_running = false;
-  q->once();
-  //cv.notify_one();
   return true;
 }
 
-void Writer::handle(std::unique_ptr<Buffer> ptr) {
-  //cout << fd << ' ' << ptr.get()->str() << ' ' << ptr.get()->size() << endl;
-  if (fd) {
-    write(fd, ptr.get()->str(), ptr.get()->size());
-    cout << ptr.get()->str();
-    //cout << "Writing.." << endl;
+void Writer::handle(uptr ptr) {
+  if (fout.is_open()) {
+    fout << *ptr.get();
+    std::cout << *ptr.get();
+    fout.flush();
   }
 }
 
-//extern "C" int open(const char *, int);
-void Writer::set_file(const char *s) {
-  if (fd) close(fd);
-  fd = open(s, O_RDWR | O_APPEND);
+void Writer::set_file(const std::string &filename) {
+  if (fout.is_open()) fout.close();
+  fout.open(filename, std::ios_base::app);
 }
 

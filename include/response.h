@@ -1,41 +1,40 @@
 #ifndef __RESPONSE_H__
 #define __RESPONSE_H__
 
-#include <code.h>
 #include <sstream>
-#include <map>
 #include <type.h>
-#include <buffer.h>
 #include <request.h>
 #include <speaker.h>
+#include <logger.h>
 
 
-extern const char *DEFAULT_HTTP_VERSION;
+extern const std::string DEFAULT_HTTP_VERSION;
 extern const int DEFAULT_STATUS_CODE;
-extern const char *DEFAULT_DESCRIPTION;
-extern const char *HTTP_END_LINE;
+extern const std::string DEFAULT_DESCRIPTION;
+extern const std::string HTTP_END_LINE;
 
 class Response {
 private:
-  const char *http_version;
+  std::string http_version;
   int status_code;
-  const char *description;
+  std::string description;
 
   //char *header;
-  char *content;
+  std::string content;
   params_type params;
   Request *request;
   Speaker *speaker;
+  Logger *logger;
 
   void update_response();
-  void get_fastcgi_response(const char *suffix);
+  void get_fastcgi_response(std::string suffix);
   void get_resource();
   int content_size;
 
-  void update_param(const char *key, const char *val);
-  void update_param(const char *key, const int val);
+  //void update_param(const char *key, const char *val);
+  //void update_param(const char *key, const int val);
 public:
-  Response(Request *request = nullptr, Speaker *speaker = nullptr);
+  Response(Request *request = nullptr, Speaker *speaker = nullptr, Logger *logger = nullptr);
   void send_resource();
 } ;
 

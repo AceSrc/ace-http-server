@@ -17,7 +17,8 @@
 #include <config.h>
 using namespace std;
 
-Queue<Buffer> message_queue;
+//Queue<Buffer> message_queue;
+message_queue_type message_queue;
 Writer writer(&message_queue);
 Logger logger(&message_queue);
 
@@ -101,42 +102,18 @@ int main() {
   //User user;
   //Speaker speaker;
 
+
+  writer.set_file("log");
+  thread th(start_writer);
+
   read_config();
   Server server(8080);
-  while (true) {auto p = server.accept_client();}
-  
-  //auto fd = open("log", O_RDONLY);
-  //User user(fd, &message_queue);
-  //cout << "H" << endl;
-  //user.print();
-  //Request re;
-  //re.destr(&speaker);
+  while (true) auto p = server.accept_client();
 
-  //writer.set_file(GLOBALS["log_file"]);
-  //thread writer_thread(start_writer);
-  //thread server_thread(start_server);
-
-  //while (true) {
-    //char ch;
-    //cin >> ch;
-    //if (ch == 'q') break;
-  //}
-  
-  //writer.stop();
-  //writer_thread.join();
-  //server_thread.join(); 
-  //Client client("127.0.0.1", 8080);
-  //cout << client.recv() << endl;
-  //return 0;
-  //Fastcgi cgi("127.0.0.1", 9000);
-  //params_type params;
-  //params["a"] = (const char *)"1";
-  //params["b"] = (const char *)"2";
-  //params["SCRIPT_FILENAME"] = "index.html";
-  //const char *s = "HelloWorld";
-  //cgi.send(0xffff, params, s);
-  //cgi.recv();
-  //cout << cgi.get_stdout() << endl;
+  message_queue.stop();
+  writer.stop();
+  cout << "stoped" << endl;
+  th.join();
   return 0;
 }
 

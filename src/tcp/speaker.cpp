@@ -1,4 +1,3 @@
-#include <tools.h>
 #include <unistd.h>
 #include <tcp.h>
 #include <cstring>
@@ -22,9 +21,18 @@ void Speaker::send(const char *s) {
   else write(w_fd, s, strlen(s));
 }
 
+
 void Speaker::send(const char *s, int size) {
   if (!w_fd) write(fd, s, size);
   else write(w_fd, s, size);
+}
+
+void Speaker::send(const std::string &s) {
+  send(s.c_str(), s.size());
+}
+
+void Speaker::send(const string &s, int size) {
+  send(s.c_str(), size);
 }
 
 void Speaker::recv_once() {
@@ -39,7 +47,7 @@ void Speaker::recv_once() {
   read_len += rd;
 }
 
-char *Speaker::split(const char *s, int offset) {
+std::string Speaker::split(const char *s, int offset) {
   for (int i = strlen(s) - 1; i >= 0; i--) 
     if ((int)s[i] >= 0 && (int)s[i] <= CHAR_SET_SIZE) is_vaild[ (int)s[i] ] = true;
 
@@ -55,7 +63,7 @@ char *Speaker::split(const char *s, int offset) {
 
   for (int i = strlen(s) - 1; i >= 0; i--) 
     if ((int)s[i] >= 0 && (int)s[i] <= CHAR_SET_SIZE) is_vaild[ (int)s[i] ] = false;
-  return bufdup(rt, test_len);
+  return std::string(rt, test_len);
 }
 
 char Speaker::test(int inx) {
@@ -68,11 +76,11 @@ void Speaker::skip(int offset) {
   loaded_len += offset;
 }
 
-char *Speaker::recv(int size) {
+std::string Speaker::recv(int size) {
   while (loaded_len + size > read_len) recv_once();
   char *rt = buf + loaded_len;
   loaded_len += size;
-  return bufdup(rt, size);
+  return std::string(rt, size);
 }
 
 Speaker::~Speaker() {

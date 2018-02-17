@@ -13,6 +13,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <sstream>
 using namespace std;
 #ifndef __DEBUG__
   #define debug NULL
@@ -30,9 +31,7 @@ using namespace std;
 const int inf = 2147483647;
 
 int main(int argc, char **argv) {
-  auto fd = open("log", O_WRONLY);
-  char buf[1000] = "HelloWorld\n";
-  write(fd, buf, strlen(buf));
-  close(fd);
-  return 0;
+  string s("abc\0def", 7);
+  cout << s;
+  //cout << (string("abc") + string("cde")).c_str() << endl;
 }

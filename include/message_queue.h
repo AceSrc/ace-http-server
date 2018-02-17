@@ -12,7 +12,7 @@ class Queue {
   typedef std::unique_ptr<T> uptr;
 
 private:
-  std::queue< uptr > q;
+  std::queue<uptr> q;
   std::mutex m;
   std::condition_variable cv;
   int cnt;
@@ -28,28 +28,34 @@ public:
   uptr pop() {
     std::unique_lock<std::mutex> lock(m);
     cv.wait(lock, [&]{ return !q.empty() || is_stopped; });
-    if (is_stopped) {
-      is_stopped = false;
+    if (q.empty() && is_stopped) {
       return nullptr;
     }
 
-    auto rt = std::move(q.front()); 
+    auto rt = std::move(q.front());
     q.pop();
     return rt;
   }  
 
-  void push(uptr x) {
+  bool push(uptr x) {
+    if (is_stopped) return false;
     std::unique_lock<std::mutex> lock(m);
     q.push(std::move(x));
     lock.unlock();
     cv.notify_one();
+    return true;
   }
 
-  void once() {
+  void stop() {
     std::unique_lock<std::mutex> lock(m);
     lock.unlock();
     is_stopped = true;
-    cv.notify_one();
+  }
+
+  void start() {
+    std::unique_lock<std::mutex> lock(m);
+    lock.unlock();
+    is_stopped = false;
   }
 } ;
 

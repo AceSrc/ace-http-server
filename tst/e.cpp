@@ -1,3 +1,5 @@
+#include <sstream>
+#include <fstream>
 #include <assert.h>
 #include <math.h>
 #include <string.h>
@@ -42,6 +44,9 @@ public:
 } ;
 
 int main(int argc, char **argv) {
-  B b;
+  ifstream fin("input");
+  stringstream ss;
+  ss << fin.rdbuf();
+  cout << ss.str().size() << endl;
   return 0;
 }

@@ -3,6 +3,7 @@
 #define __SPEAKER_H_
 
 #include <unistd.h>
+#include <string>
 
 class Speaker {
   enum {
@@ -37,10 +38,12 @@ public:
 
   void send(const char *s);
   void send(const char *s, int size);
+  void send(const std::string &s);
+  void send(const std::string &s, int size);
 
   void recv_once();
-  char *split(const char *s, int offset = 0);
-  char *recv(int size);
+  std::string split(const char *s, int offset = 0);
+  std::string recv(int size);
   template<typename T>
     T recv_struct() {
       int size = sizeof(T);

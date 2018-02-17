@@ -17,7 +17,7 @@ private:
 
 public:
   User();
-  User(const int fd, message_queue_type *_q);
+  User(const int fd, message_queue_type *_q, const std::string &ip = "unknown ip", const int port = 0);
   User(User &&x);
   User(const User &x) = delete;
   ~User();

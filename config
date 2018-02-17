@@ -1,3 +1,13 @@
+index index.html
 log_file log
-root /html
-php 9000
+root /html/trust
+toy 9001
+
+css-type text/css
+js-type application/js
+json-type application/json
+jpg-type image/jpg
+jpeg-type image/jpeg
+png-type image/png
+ico-type image/ico
+gif-type image/gif
