@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <user.h>
+#include <mutex>
 
 class Server {
   enum {
@@ -16,11 +17,13 @@ class Server {
   } ;
 private:
   int servfd;
+  std::mutex m;
 
 public:
-  Server(int proxy = 8080);
+  Server();
   ~Server();
   User accept_client();
+  void start(int port = 8080);
 } ;
 
 class Client {

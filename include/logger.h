@@ -21,12 +21,13 @@ class Logger {
   //Buffer buffer;
 private:
   std::stringstream ss;
-  std::string ip;
-  int port;
 
   message_queue_type *q;
 
 public:
+  std::string ip;
+  int port;
+
   Logger(message_queue_type *_q = nullptr, const std::string &ip = "Unknown ip", const int port = 0);
   ~Logger();
   

@@ -48,7 +48,9 @@ void Writer::start() {
   is_running = true;
 
   while (true) {
+    //std::cout << "pop" << std::endl;
     auto ptr = q->pop();
+    //std::cout << (bool)ptr << std::endl;
     if (ptr) handle(std::move(ptr));
     else if (!is_running) break;
   }

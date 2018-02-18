@@ -59,11 +59,12 @@ std::string Speaker::split(const char *s, int offset) {
   }
   char *rt = buf + loaded_len + offset;
   *(buf + test_len + loaded_len) = '\0';
+  //std::cout << rt << ' ' << test_len << std::endl;
   loaded_len += test_len + 1;
 
   for (int i = strlen(s) - 1; i >= 0; i--) 
     if ((int)s[i] >= 0 && (int)s[i] <= CHAR_SET_SIZE) is_vaild[ (int)s[i] ] = false;
-  return std::string(rt, test_len);
+  return std::string(rt, test_len - offset);
 }
 
 char Speaker::test(int inx) {

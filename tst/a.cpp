@@ -336,6 +336,12 @@ int main(){
                         rdlen = read(connfd, paramValue, paramValueLen);
                         contentLen -= rdlen;
 
+                        if (strcmp(paramName, "HTTP_COOKIE") == 0) {
+                          printf("size: %d\n", paramValueLen);
+                          for (int i = 0; i < paramValueLen; i++) 
+                            printf("[%02x] ", paramValue[i]);
+                        }
+                        puts("");
                         printf("%s=%s\n", paramName, paramValue);
 
                         if (paramNV.curLen == paramNV.maxLen)

@@ -20,6 +20,7 @@ private:
   std::string description;
 
   //char *header;
+  std::string header_append;
   std::string content;
   params_type params;
   Request *request;

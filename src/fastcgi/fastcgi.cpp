@@ -138,10 +138,12 @@ Fastcgi::Fastcgi(const std::string &ip, int proxy) : response_stdout(""), respon
   int clientfd = socket(PF_INET, SOCK_STREAM, 0);
   //printf("%s %d\n", ip, proxy);
   if (connect(clientfd, (sockaddr *)&addr, sizeof(sockaddr)) == -1) {
-    printf("Can't connect to(%d)\n", errno);
-    printf("%s\n", strerror(errno));
-    exit(1);
+    //printf("Can't connect to(%d)\n", errno);
+    //printf("%s\n", strerror(errno));
+    _ok = false;
+    return ;
   }
+  _ok = true;
   speaker.setfd(clientfd);
   speaker.setwfd(clientfd);
 }
@@ -157,3 +159,6 @@ std::string Fastcgi::get_stderr() const {
   return response_stderr;
 }
 
+bool Fastcgi::ok() const {
+  return _ok;
+}

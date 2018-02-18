@@ -1,6 +1,13 @@
+max_user 20
+
+port 8080
+
 index index.html
+error_page /404.html
 log_file log
-root /html/trust
+root /html
+
+php 9000
 toy 9001
 
 css-type text/css

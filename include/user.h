@@ -22,6 +22,8 @@ public:
   User(const User &x) = delete;
   ~User();
 
+  void start();
+
   void print();
   User &operator=(User &&x);
   User &operator=(const User &x) = delete;

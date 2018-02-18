@@ -50,6 +50,7 @@ void Request::destr() {
   while (true) {
     if (speaker->test(1) == '\r') break;
     std::string key = speaker->split(":", 1);
+    //std::cout << key << std::endl;
     std::string val = speaker->split("\r", 1);
     params[key] = val;
   }

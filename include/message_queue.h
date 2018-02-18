@@ -7,6 +7,7 @@
 #include <mutex>
 #include <condition_variable>
 
+#include <iostream>
 template<typename T>
 class Queue {
   typedef std::unique_ptr<T> uptr;
@@ -50,6 +51,7 @@ public:
     std::unique_lock<std::mutex> lock(m);
     lock.unlock();
     is_stopped = true;
+    cv.notify_one();
   }
 
   void start() {

@@ -76,6 +76,8 @@ private:
   void send_stdin(ushort requestId, const std::string &s);
 
   FCGI_Header recv_header();
+
+  bool _ok;
 public:
   Fastcgi(const std::string &ip, int proxy = 9000);
   ~Fastcgi();
@@ -84,6 +86,8 @@ public:
   void recv();
   std::string get_stdout() const;
   std::string get_stderr() const;
+
+  bool ok() const;
 } ;
 #endif
 

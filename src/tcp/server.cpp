@@ -8,7 +8,11 @@
 #include <response.h>
 #include <string>
 
-Server::Server(int port) {
+Server::Server() {
+
+}
+
+void Server::start(int port) {
   servfd = socket(AF_INET, SOCK_STREAM, 0);
 
   struct sockaddr_in servaddr;
@@ -26,7 +30,6 @@ Server::Server(int port) {
   while (bind(servfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) == -1) {
     sleep(1);
     printf("Failed to bind(%d)\n", errno);
-    //exit(1);
   }
   printf("Start waiting...\n");
   if (listen(servfd, MAX_LISTENING) == -1) {
@@ -36,6 +39,8 @@ Server::Server(int port) {
 }
 
 User Server::accept_client() {
+  std::lock_guard<std::mutex> lock(m);
+
   struct sockaddr_in client_addr;
   socklen_t length = sizeof(client_addr);
   int conn = 0;
