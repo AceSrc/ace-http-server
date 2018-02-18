@@ -63,7 +63,13 @@ int main() {
     x = thread(start_user, id);
     id++;
   }
-  while (true);
+  while (true) {
+    char ch;
+    scanf("%c", &ch);
+    if (ch == 'l') {
+      read_config();
+    }
+  }
   return 0;
 }
 

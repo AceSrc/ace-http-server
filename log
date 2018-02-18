@@ -13499,3 +13499,25 @@
 127.0.0.1 43412  2018-02-18 15:25:30  Asking for /404.html
 127.0.0.1 43412  2018-02-18 15:25:30  Text(text/html) Content-Length: 4(0.00K)
 127.0.0.1 43412  2018-02-18 15:25:30  Resource sent
+127.0.0.1 43806  2018-02-18 15:30:21  Connected
+127.0.0.1 43810  2018-02-18 15:30:21  Connected
+127.0.0.1 43806  2018-02-18 15:30:21  http request parsed
+127.0.0.1 43806  2018-02-18 15:30:21  Asking for /a.php
+127.0.0.1 43806  2018-02-18 15:30:21  Can't connect to Fastcgi server(php)
+127.0.0.1 43806  2018-02-18 15:30:21  Asking for /404.html
+127.0.0.1 43806  2018-02-18 15:30:21  Text(text/html) Content-Length: 4(0.00K)
+127.0.0.1 43806  2018-02-18 15:30:21  Resource sent
+127.0.0.1 43810  2018-02-18 15:30:22  http request parsed
+127.0.0.1 43810  2018-02-18 15:30:22  Asking for /favicon.ico
+127.0.0.1 43810  2018-02-18 15:30:22  Failed to open file /html/favicon.ico
+127.0.0.1 43810  2018-02-18 15:30:22  Asking for /404.html
+127.0.0.1 43810  2018-02-18 15:30:22  Text(text/html) Content-Length: 4(0.00K)
+127.0.0.1 43810  2018-02-18 15:30:22  Resource sent
+127.0.0.1 43886  2018-02-18 15:30:54  Connected
+127.0.0.1 43890  2018-02-18 15:30:54  Connected
+127.0.0.1 43886  2018-02-18 15:30:54  http request parsed
+127.0.0.1 43886  2018-02-18 15:30:54  Asking for /a.php
+127.0.0.1 43886  2018-02-18 15:30:54  Can't connect to Fastcgi server(php)
+127.0.0.1 43886  2018-02-18 15:30:54  Asking for /a.html
+127.0.0.1 43886  2018-02-18 15:30:54  Text(text/html) Content-Length: 11(0.00K)
+127.0.0.1 43886  2018-02-18 15:30:54  Resource sent
