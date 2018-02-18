@@ -30,6 +30,10 @@ char *get_content(const std::string &filename, std::string query) {
     std::cout << i->first << ' ' << i->second << std::endl;
 
   yyin = fopen(filename.c_str(), "r");
+  std::cout << yyin << std::endl;
   yyparse();
+  std::cout << "Get Content" << std::endl;
+  std::cout << rt << std::endl;
+  std::cout << "------------------" << std::endl;
   return strdup(rt.c_str());
 }

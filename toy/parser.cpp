@@ -62,7 +62,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "parser.y" /* yacc.c:339  */
+#line 1 "./toy/parser.y" /* yacc.c:339  */
 
 #include <cstdio>
 #include <iostream>
@@ -78,7 +78,7 @@ void yyerror(const char *s) {
   exit(1);
 }
 
-#line 82 "parser.cpp" /* yacc.c:339  */
+#line 82 "./toy/parser.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -98,8 +98,8 @@ void yyerror(const char *s) {
 
 /* In a future release of Bison, this section will be replaced
    by #include "parser.hpp".  */
-#ifndef YY_YY_PARSER_HPP_INCLUDED
-# define YY_YY_PARSER_HPP_INCLUDED
+#ifndef YY_YY_TOY_PARSER_HPP_INCLUDED
+# define YY_YY_TOY_PARSER_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -124,13 +124,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 17 "parser.y" /* yacc.c:355  */
+#line 17 "./toy/parser.y" /* yacc.c:355  */
 
   std::string *str;
   int token;
   int int_value;
 
-#line 134 "parser.cpp" /* yacc.c:355  */
+#line 134 "./toy/parser.cpp" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -143,11 +143,11 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PARSER_HPP_INCLUDED  */
+#endif /* !YY_YY_TOY_PARSER_HPP_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 151 "parser.cpp" /* yacc.c:358  */
+#line 151 "./toy/parser.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1234,127 +1234,127 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 47 "parser.y" /* yacc.c:1646  */
+#line 47 "./toy/parser.y" /* yacc.c:1646  */
     { rt += std::to_string((yyvsp[-1].int_value)); }
-#line 1240 "parser.cpp" /* yacc.c:1646  */
+#line 1240 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 48 "parser.y" /* yacc.c:1646  */
+#line 48 "./toy/parser.y" /* yacc.c:1646  */
     { rt += params[*(yyvsp[0].str)]; }
-#line 1246 "parser.cpp" /* yacc.c:1646  */
+#line 1246 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 49 "parser.y" /* yacc.c:1646  */
+#line 49 "./toy/parser.y" /* yacc.c:1646  */
     { rt += *(yyvsp[0].str); }
-#line 1252 "parser.cpp" /* yacc.c:1646  */
+#line 1252 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 50 "parser.y" /* yacc.c:1646  */
+#line 50 "./toy/parser.y" /* yacc.c:1646  */
     { rt += *(yyvsp[0].str); }
-#line 1258 "parser.cpp" /* yacc.c:1646  */
+#line 1258 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 51 "parser.y" /* yacc.c:1646  */
+#line 51 "./toy/parser.y" /* yacc.c:1646  */
     { rt += std::to_string((yyvsp[0].int_value)); }
-#line 1264 "parser.cpp" /* yacc.c:1646  */
+#line 1264 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 52 "parser.y" /* yacc.c:1646  */
+#line 52 "./toy/parser.y" /* yacc.c:1646  */
     { rt += '+'; }
-#line 1270 "parser.cpp" /* yacc.c:1646  */
+#line 1270 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 53 "parser.y" /* yacc.c:1646  */
+#line 53 "./toy/parser.y" /* yacc.c:1646  */
     { rt += '-'; }
-#line 1276 "parser.cpp" /* yacc.c:1646  */
+#line 1276 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 54 "parser.y" /* yacc.c:1646  */
+#line 54 "./toy/parser.y" /* yacc.c:1646  */
     { rt += '*'; }
-#line 1282 "parser.cpp" /* yacc.c:1646  */
+#line 1282 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 55 "parser.y" /* yacc.c:1646  */
+#line 55 "./toy/parser.y" /* yacc.c:1646  */
     { rt += '/'; }
-#line 1288 "parser.cpp" /* yacc.c:1646  */
+#line 1288 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 56 "parser.y" /* yacc.c:1646  */
+#line 56 "./toy/parser.y" /* yacc.c:1646  */
     { rt += '$'; }
-#line 1294 "parser.cpp" /* yacc.c:1646  */
+#line 1294 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 57 "parser.y" /* yacc.c:1646  */
+#line 57 "./toy/parser.y" /* yacc.c:1646  */
     { rt += '('; }
-#line 1300 "parser.cpp" /* yacc.c:1646  */
+#line 1300 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 58 "parser.y" /* yacc.c:1646  */
+#line 58 "./toy/parser.y" /* yacc.c:1646  */
     { rt += ')'; }
-#line 1306 "parser.cpp" /* yacc.c:1646  */
+#line 1306 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 62 "parser.y" /* yacc.c:1646  */
+#line 62 "./toy/parser.y" /* yacc.c:1646  */
     { (yyval.int_value) = (yyvsp[-1].int_value); }
-#line 1312 "parser.cpp" /* yacc.c:1646  */
+#line 1312 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 63 "parser.y" /* yacc.c:1646  */
+#line 63 "./toy/parser.y" /* yacc.c:1646  */
     { (yyval.int_value) = (yyvsp[-2].int_value) + (yyvsp[0].int_value); }
-#line 1318 "parser.cpp" /* yacc.c:1646  */
+#line 1318 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 64 "parser.y" /* yacc.c:1646  */
+#line 64 "./toy/parser.y" /* yacc.c:1646  */
     { (yyval.int_value) = (yyvsp[-2].int_value) - (yyvsp[0].int_value); }
-#line 1324 "parser.cpp" /* yacc.c:1646  */
+#line 1324 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 65 "parser.y" /* yacc.c:1646  */
+#line 65 "./toy/parser.y" /* yacc.c:1646  */
     { (yyval.int_value) = (yyvsp[-2].int_value) * (yyvsp[0].int_value); }
-#line 1330 "parser.cpp" /* yacc.c:1646  */
+#line 1330 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 66 "parser.y" /* yacc.c:1646  */
+#line 66 "./toy/parser.y" /* yacc.c:1646  */
     { (yyval.int_value) = (yyvsp[-2].int_value) / (yyvsp[0].int_value); }
-#line 1336 "parser.cpp" /* yacc.c:1646  */
+#line 1336 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 68 "parser.y" /* yacc.c:1646  */
+#line 68 "./toy/parser.y" /* yacc.c:1646  */
     { (yyval.int_value) = (yyvsp[0].int_value); }
-#line 1342 "parser.cpp" /* yacc.c:1646  */
+#line 1342 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 69 "parser.y" /* yacc.c:1646  */
+#line 69 "./toy/parser.y" /* yacc.c:1646  */
     { (yyval.int_value) = stoi(params[*(yyvsp[0].str)]); }
-#line 1348 "parser.cpp" /* yacc.c:1646  */
+#line 1348 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 72 "parser.y" /* yacc.c:1646  */
+#line 72 "./toy/parser.y" /* yacc.c:1646  */
     { (yyval.str) = (yyvsp[0].str); }
-#line 1354 "parser.cpp" /* yacc.c:1646  */
+#line 1354 "./toy/parser.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1358 "parser.cpp" /* yacc.c:1646  */
+#line 1358 "./toy/parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

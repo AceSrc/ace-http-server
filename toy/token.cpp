@@ -1,6 +1,6 @@
-#line 1 "token.cpp"
+#line 1 "./toy/token.cpp"
 
-#line 3 "token.cpp"
+#line 3 "./toy/token.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -442,13 +442,13 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "token.l"
-#line 2 "token.l"
+#line 1 "./toy/token.l"
+#line 2 "./toy/token.l"
 #include <string>
 #include <iostream>
 #include "parser.hpp"
-#line 450 "token.cpp"
-#line 451 "token.cpp"
+#line 450 "./toy/token.cpp"
+#line 451 "./toy/token.cpp"
 
 #define INITIAL 0
 
@@ -665,10 +665,10 @@ YY_DECL
 		}
 
 	{
-#line 10 "token.l"
+#line 10 "./toy/token.l"
 
 
-#line 671 "token.cpp"
+#line 671 "./toy/token.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -727,7 +727,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 12 "token.l"
+#line 12 "./toy/token.l"
 { 
   /*std::cout << yytext << std::endl; */
   yylval.int_value = atoi(yytext); 
@@ -736,7 +736,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 17 "token.l"
+#line 17 "./toy/token.l"
 {
   /*std::cout << yytext << std::endl; */
   yylval.str = new std::string(yytext, yyleng); 
@@ -745,7 +745,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 22 "token.l"
+#line 22 "./toy/token.l"
 {
   /*std::cout << (int)yytext[0] << '(' << yytext[0] << ')' << std::endl; */
   return yytext[0];
@@ -753,7 +753,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 26 "token.l"
+#line 26 "./toy/token.l"
 {
   /*std::cout << (int)yytext[0] << '(' << yytext[0] << ')' << std::endl; */
   yylval.str = new std::string(yytext, yyleng); 
@@ -762,10 +762,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 32 "token.l"
+#line 32 "./toy/token.l"
 ECHO;
 	YY_BREAK
-#line 768 "token.cpp"
+#line 768 "./toy/token.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1770,7 +1770,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 32 "token.l"
+#line 32 "./toy/token.l"
 
 
 int yywrap() {

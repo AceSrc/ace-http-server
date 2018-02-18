@@ -32,7 +32,7 @@ $(OBJ_DIR)/%.o: src/%.cpp
 -include $(OBJS:.o=.d)
 	
 # Rules
-.PHONY: app run clean commit reset hardreset tst install
+.PHONY: app run clean commit reset hardreset tst install toy
 tst:
 	@echo $(LINKFLAGS)
 app: $(BINARY)
@@ -64,3 +64,12 @@ hardreset:
 clean: 
 	rm -rf $(BUILD_DIR)
 
+toy:
+	@echo running flex...
+	@flex -o ./toy/token.cpp ./toy/token.l
+	@echo running bison...
+	@bison -d -o ./toy/parser.cpp ./toy/parser.y
+	@echo compiling...
+	@g++ ./toy/token.cpp ./toy/parser.cpp ./toy/main.cpp ./toy/fastcgi.cpp -std=c++17 -o ./toy/toy-server
+	@echo running...
+	@./toy/toy-server

@@ -1,6 +1,18 @@
+NJU 凌浩 161180076
+
 # 使用说明
 
 配置一下 config 文件之后 make run 就好了, 注意一下如果要使用php-fpm的话记得确保php-fpm有权限访问到网站的根目录. 
+
+以默认配置运行的话, 
+
+访问: localhost:8080 出来的是那个 blog
+
+开两个终端, 一个运行 make toy 运行一个 Fastcgi 的程序之后, 
+再在另一个运行 make run, 访问 http://localhost:8080/a.toy?a=1&&b=2 的话是做一个简单的加法. (注意这个 Fastcgi 程序写得非常不完善... 很容易跪)
+
+如果装了 php 和 php-fpm, 还可以试着 phpinfo(). 不过要配置php的权限还有 root 要写绝对路径. 
+
 
 目前 config 支持的配置命令有:
 
@@ -40,5 +52,5 @@
 
 ## 已经有的页面
   letter 是我以前弄的一个 js 练习
-  
+
   html 里面有 trust 和 blog 是作业要求显示的网页, 如果要显示记得 修改 config 里面的 root

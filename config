@@ -5,7 +5,7 @@ port 8080
 index index.html
 error_page /404.html
 log_file log
-root /html
+root ./html/trust
 
 php 9000
 toy 9001
